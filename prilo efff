@@ -1,0 +1,16 @@
+nt		rotate_X(t_fdf *fdf)
+{
+	int y;
+    int x;
+
+    mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
+    y = -1;
+    while (fdf->matrix[++y])
+    {
+        x = -1;
+        while (++x < 19)
+        {
+			fdf->matrix[y][x].y = ((19 * 10) / 2) + 10 * fdf->matrix[y][x].d_y -((11 * 10) / 2) * cos(fdf->angl) + 10 *  fdf->matrix[y][x].d_z * sin(fdf->angl);
+        }
+    }
+	y = -1;
