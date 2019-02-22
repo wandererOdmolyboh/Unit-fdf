@@ -6,7 +6,7 @@
 /*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 04:11:34 by dmolyboh          #+#    #+#             */
-/*   Updated: 2019/02/22 13:43:13 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/02/22 13:49:34 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,8 @@ static void line(void *mlx_ptr, void *win_ptr, double x1, double y1, double x2, 
     int color;
 
     color = color2 - color1;
-
-	c = H/4 + 19/2; 
-	d1 = V/4 + 12/2;
+	c = V/4; 
+	d1 = H/4;
 
 	dx = (x2 - x1 >= 0 ? 1 : -1);
 	dy = (y2 - y1 >= 0 ? 1 : -1);

@@ -6,7 +6,7 @@
 /*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 15:32:13 by denya             #+#    #+#             */
-/*   Updated: 2019/02/22 12:22:05 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/02/22 15:37:08 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef	struct	s_fdf
 
 # define SPACE 49
 # define ANGLE 0.02
-# define SCALE 1.2
+# define SCALE 1.1
 
 
 # define ALPHA 15

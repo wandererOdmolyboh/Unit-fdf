@@ -6,7 +6,7 @@
 /*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/02 16:32:53 by wanderer          #+#    #+#             */
-/*   Updated: 2019/02/22 12:40:14 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/02/22 16:06:44 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,8 +150,8 @@ int		rotate_Y(t_fdf *fdf, int direct)
         x = -1;
         while (++x < 19)
         {
-			fdf->matrix[y][x].x = fdf->scaling * (fdf->matrix[y][x].d_x * cos(fdf->anglY) + fdf->matrix[y][x].d_z * sin(fdf->anglY));
-			fdf->matrix[y][x].z = fdf->scaling * (fdf->matrix[y][x].d_z * cos(fdf->anglY) - fdf->matrix[y][x].d_x * sin(fdf->anglY));				
+			fdf->matrix[y][x].x = (fdf->matrix[y][x].d_x * cos(fdf->anglY) + fdf->matrix[y][x].d_z * sin(fdf->anglY));
+			fdf->matrix[y][x].z = (fdf->matrix[y][x].d_z * cos(fdf->anglY) - fdf->matrix[y][x].d_x * sin(fdf->anglY));				
         }
     }
 	orisovka(fdf);
@@ -174,8 +174,8 @@ int		rotate_X(t_fdf *fdf, int direct)
         x = -1;
         while (++x < 19)
         {
-            fdf->matrix[y][x].y = fdf->scaling * (fdf->matrix[y][x].d_y  * cos(fdf->anglX) - fdf->matrix[y][x].d_z  * sin(fdf->anglX));
-            fdf->matrix[y][x].z = fdf->scaling * (fdf->matrix[y][x].d_z  * cos(fdf->anglX) + fdf->matrix[y][x].d_y  * sin(fdf->anglX));
+            fdf->matrix[y][x].y = (fdf->matrix[y][x].d_y  * cos(fdf->anglX) - fdf->matrix[y][x].d_z  * sin(fdf->anglX));
+            fdf->matrix[y][x].z = (fdf->matrix[y][x].d_z  * cos(fdf->anglX) + fdf->matrix[y][x].d_y  * sin(fdf->anglX));
         }
     }
 	orisovka(fdf);
@@ -210,25 +210,33 @@ int     rotate_Z(t_fdf *fdf, int direct)
 }
 
 
-int		scale(t_fdf *fdf, int scale)
+int		scale(t_fdf *fdf, int scale)// отдельныи функции
 {
 	int y;
     int x;
+	static double scaling = 1;
+
 
 	if (scale)
-        fdf->scaling += 10;
+        scaling += 0.3;
     else
-        fdf->scaling -= 10;
+        scaling -= 0.3;
+	if (scaling > 2.3 || scaling < 0.7)
+		return (0);
     mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
     y = -1;
+	printf("%f\n", scaling);
     while (fdf->matrix[++y])
     {
         x = -1;
         while (++x < 19)
         {
-			fdf->matrix[y][x].x = fdf->matrix[y][x].d_x * fdf->scaling * SCALE;
-			fdf->matrix[y][x].y = fdf->matrix[y][x].d_y * fdf->scaling * SCALE;
-			fdf->matrix[y][x].z = fdf->matrix[y][x].d_z * fdf->scaling * SCALE;
+			fdf->matrix[y][x].d_x = fdf->matrix[y][x].d_x * scaling;
+			fdf->matrix[y][x].d_y = fdf->matrix[y][x].d_y * scaling;
+			fdf->matrix[y][x].d_z = fdf->matrix[y][x].d_z * scaling;
+			fdf->matrix[y][x].x = fdf->matrix[y][x].d_x;
+			fdf->matrix[y][x].y = fdf->matrix[y][x].d_y;
+			fdf->matrix[y][x].z = fdf->matrix[y][x].d_z;
         }
     }
 	orisovka(fdf);
@@ -267,7 +275,7 @@ void deafult_state(t_fdf *fdf)
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	fdf->anglX = 0;
 	fdf->anglY = 0;
-	fdf->scaling = 20;
+	fdf->scaling = 1;
 	while (fdf->matrix[++y])
 	{
 		x = 0;
