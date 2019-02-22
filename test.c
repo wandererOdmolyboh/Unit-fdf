@@ -6,7 +6,7 @@
 /*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/02 16:32:53 by wanderer          #+#    #+#             */
-/*   Updated: 2019/02/16 16:55:53 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/02/22 12:40:14 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,70 @@
 #include <stdlib.h>
 // #include <X.h>
 int func_parse_stroke (t_fdf *fdf, char *string);
-char *ft_comma(char *string)
+
+
+static int check_value(char str, int *color, int *power)
+{
+	if (str == 'A')
+        *color = *color + 10  * pow(16, (*power));
+    else if (str == 'B')
+        *color = *color + 11  * pow(16, (*power));
+    else if (str == 'C')
+		*color = *color + 12  * pow(16, (*power));
+    else if (str == 'D')
+		*color = *color + 13  * pow(16, (*power));
+    else if (str == 'E')
+		*color = *color + 14  * pow(16, (*power));
+    else if (str == 'F')
+		*color = *color + 15  * pow(16, (*power));
+    (*power)++;
+	return (*color);
+}
+
+static int        color_found(char *str, int ch)
+{
+	int 	i;
+    int		color;
+    char	*s;
+	int		power;
+	power = 0;
+    color = 0;
+	i = 2;
+	
+    while (str[i] && i < 8)
+        i++;
+    while(i-- > 2)
+    {
+		if (str[i] >= 'A' && str[i] <= 'F')
+			check_value(str[i], &color, &(power));
+        else
+        {
+            s = ft_strsub(&str[i], 0, 1);
+            color += ft_atoi(s) * pow(16, power++);	
+        }
+		if (ch == 0)
+		printf("1");
+    }
+    return (color);
+}
+
+int	ft_comma(char *string)
 {
 	int i;
+	char *leaks;
 
 	i = 0;
-
 	while(string[i] && (string[i] >= '0' && string[i] <= '9' ))
 		i++;
 	if (string[i] != ',')
-		return (ft_strdup("0xFFFFFF"));
+		return (16777215);
 	else
-		return (ft_strdup(string + i + 1)); 
+	{
+		leaks = ft_strsub(string + i, 1 , 9);
+		i = color_found(leaks, 0);
+		free(leaks);
+		return (i);
+	}
 }
 
 
@@ -187,20 +239,24 @@ int		rotate_dop(t_fdf *fdf)
 {
 	int y;
     int x;
-
-    mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
+    fdf->anglX -=ANGLE;
+     mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
     y = -1;
     while (fdf->matrix[++y])
     {
         x = -1;
         while (++x < 19)
         {
-			fdf->matrix[y][x].y = ((19 * 10) / 2) + 10 * fdf->matrix[y][x].d_y -((11 * 10) / 2) * cos(fdf->anglX) + 10 *  fdf->matrix[y][x].d_z * sin(fdf->anglX);
+			fdf->matrix[y][x].y = ((19 * fdf->scaling) / 2) +
+            fdf->scaling * fdf->matrix[y][x].d_y - ((11 * fdf->scaling) / 2) *
+            cos(fdf->anglX) + fdf->scaling *  fdf->matrix[y][x].d_z *
+            sin(fdf->anglX);
         }
     }
 	orisovka(fdf);
 	return (0);
 }
+
 void deafult_state(t_fdf *fdf)
 {
 	int x;
@@ -292,7 +348,7 @@ int func_parse_stroke (t_fdf *fdf, char *string)
 			x++;
 			i++;
 		}
-		while(string[i] && ( (string[i] >= '0' && string[i] <= '9') || string[i] ==',' || 
+		while(string[i] && ( (string[i] >= '0' && string[i] <= '9') || string[i] == ',' || string[i] == 'x'||
 		(string[i] >= 'A' && string[i] <= 'F')))
 			i++;		
 	}
