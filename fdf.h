@@ -6,7 +6,7 @@
 /*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 15:32:13 by denya             #+#    #+#             */
-/*   Updated: 2019/02/24 18:27:27 by wanderer         ###   ########.fr       */
+/*   Updated: 2019/02/24 20:49:55 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-# include <mlx.h>
+//# include <mlx.h>
 # include <math.h>
 
 typedef	struct	s_point
