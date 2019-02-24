@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validator.c                                        :+:      :+:    :+:   */
+/*   WhyNot?.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/01/28 17:14:44 by denya             #+#    #+#             */
-/*   Updated: 2019/02/24 20:11:07 by wanderer         ###   ########.fr       */
+/*   Created: 2019/02/24 18:55:14 by wanderer          #+#    #+#             */
+/*   Updated: 2019/02/24 20:10:58 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "libft/libft.h"
+#include <stdio.h>
 
 int vslidate_str(char *buf)
 {
@@ -55,5 +55,17 @@ int validate_hard(char *buf)
     }
         if (buf[y - 1] == ' ')
             return (3);
+    return (0);
+}
+
+int main (void)
+{
+    char *string = "1,0xFF0000 10,0xFF0000";
+    if (validate_hard(string) != 0)
+        printf("NO 1\n");
+    else if (vslidate_str(string) != 0)
+        printf("NO 2\n");
+    else 
+        printf("OK\n");
     return (0);
 }

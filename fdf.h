@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 15:32:13 by denya             #+#    #+#             */
-/*   Updated: 2019/02/22 15:37:08 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/02/24 18:27:27 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #ifndef FDF_H
 # define FDF_H
+
 # define R 0.0174533
 
 # include "libft/libft.h"
@@ -22,7 +23,8 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-#include <mlx.h>
+# include <mlx.h>
+# include <math.h>
 
 typedef	struct	s_point
 {
@@ -45,6 +47,7 @@ typedef	struct	s_fdf
 	t_point 	**matrix;
 	double		anglX;
 	double		anglY;
+	double		anglZ;
 	int			len_y;
 	int			len_x;
 	int			scaling;
@@ -52,7 +55,6 @@ typedef	struct	s_fdf
 }				t_fdf;
 
 # define BUFF_SIZE 60
-// # define D_COLOR ft_strsub("0xFFFFFF");
 # define TRUE 1
 # define FALSE 0
 
@@ -84,17 +86,19 @@ typedef	struct	s_fdf
 # define V 1800
 # define H 1200
 
-int validate_hard(char *buf);
-int vslidate_str(char *buf);
-void create_list(char *line);
-int error_output(char **argv, int ch);
-int count_new_line(char *line);
-int **create_matrix(char *line, int len);
-int *create_element_matrix(char *stroke);
-int count_element(char *element);
-int matrix_povorota(t_point *point, int angle);
-void orisovka(t_fdf *fdf);
-
-
+int		rotate_X(t_fdf *fdf, int direct);
+int		rotate_Y(t_fdf *fdf, int direct);
+int		rotate_Z(t_fdf *fdf, int direct);
+int		validate_hard(char *buf);
+int		vslidate_str(char *buf);
+int		error_output(char **argv, int ch);
+int		count_new_line(char *line);
+int		**create_matrix(char *line, int len);
+int		*create_element_matrix(char *stroke);
+int		rotate_dop(t_fdf *fdf);
+int		count_element(char *element);
+int		matrix_povorota(t_point *point, int angle);
+void	create_list(char *line);
+void	orisovka(t_fdf *fdf);
 
 #endif

@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/02 16:32:53 by wanderer          #+#    #+#             */
-/*   Updated: 2019/02/22 16:06:44 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/02/24 20:15:44 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-#include <math.h>
 #include <mlx.h>
 #include <stdlib.h>
-// #include <X.h>
+
 int func_parse_stroke (t_fdf *fdf, char *string);
 
 
@@ -36,7 +35,7 @@ static int check_value(char str, int *color, int *power)
 	return (*color);
 }
 
-static int        color_found(char *str, int ch)
+static int        color_found(char *str)
 {
 	int 	i;
     int		color;
@@ -57,8 +56,6 @@ static int        color_found(char *str, int ch)
             s = ft_strsub(&str[i], 0, 1);
             color += ft_atoi(s) * pow(16, power++);	
         }
-		if (ch == 0)
-		printf("1");
     }
     return (color);
 }
@@ -76,139 +73,11 @@ int	ft_comma(char *string)
 	else
 	{
 		leaks = ft_strsub(string + i, 1 , 9);
-		i = color_found(leaks, 0);
+		i = color_found(leaks);
 		free(leaks);
 		return (i);
 	}
 }
-
-
-int vslidate_str(char *buf)
-{
-    int i;
-
-    i = 0;
-    while(buf[i])
-    {
-        if (buf[i] == ' ' || buf[i] == '\t' || (buf[i] >= '0' && buf[i] <= '9')
-        || (buf[i] >= 'A' && buf[i] <= 'F')
-        || buf[i] == 'x' || buf[i] == ',' || buf[i] == '\n')
-            i++;
-        else
-            return(-1);
-        i++;
-    }
-    return (0);
-}
-
-int validate_hard(char *buf)
-{
-    int y;
-    int c_len_num;
-
-    y = 0;
-    while(buf[y])
-    {
-        c_len_num = 0;
-        if (buf[y] == 'x')
-        {
-            if (buf[y] && buf[y - 1]!= '0' && buf[y - 2]!= ',')
-                return (3);
-            while(buf[y] && ((buf[y]>= 'A' && buf[y] <= 'F') 
-            || (buf[y] >= '0' && buf[y] <= '9' )))
-                c_len_num++;
-            if (c_len_num < 2 || c_len_num > 6)
-                return (3);
-            c_len_num = 0;
-        }
-        y++;
-    }
-        if (buf[y - 1] == ' ')
-            return (3);
-    return (0);
-}
-
-
-
-
-
-
-
-int		rotate_Y(t_fdf *fdf, int direct)
-{
-	int y;
-    int x;
-
-    mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-     if (direct)
-        fdf->anglY += ANGLE;
-    else
-        fdf->anglY -=ANGLE;
-    y = -1;
-    while (fdf->matrix[++y])
-    {
-        x = -1;
-        while (++x < 19)
-        {
-			fdf->matrix[y][x].x = (fdf->matrix[y][x].d_x * cos(fdf->anglY) + fdf->matrix[y][x].d_z * sin(fdf->anglY));
-			fdf->matrix[y][x].z = (fdf->matrix[y][x].d_z * cos(fdf->anglY) - fdf->matrix[y][x].d_x * sin(fdf->anglY));				
-        }
-    }
-	orisovka(fdf);
-	return (0);
-}
-
-int		rotate_X(t_fdf *fdf, int direct)
-{
-	int y;
-    int x;
-
-    mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-    y = -1;
-     if (direct)
-        fdf->anglX += ANGLE;
-    else
-        fdf->anglX -=ANGLE;
-    while (fdf->matrix[++y])
-    {
-        x = -1;
-        while (++x < 19)
-        {
-            fdf->matrix[y][x].y = (fdf->matrix[y][x].d_y  * cos(fdf->anglX) - fdf->matrix[y][x].d_z  * sin(fdf->anglX));
-            fdf->matrix[y][x].z = (fdf->matrix[y][x].d_z  * cos(fdf->anglX) + fdf->matrix[y][x].d_y  * sin(fdf->anglX));
-        }
-    }
-	orisovka(fdf);
-	return (0);
-}
-
-int     rotate_Z(t_fdf *fdf, int direct)
-{
-    int y;
-    int x;
-
-    mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-    y = -1;
-    if (direct)
-        fdf->anglX += ANGLE;
-    else
-        fdf->anglX -=ANGLE;
-    while (fdf->matrix[++y])
-    {
-        x = -1;
-        while (++x < 19)
-        {
-
-            fdf->matrix[y][x].x = fdf->matrix[y][x].x * cos(fdf->anglX) +
-            fdf->matrix[y][x].y * sin(fdf->anglX);
-            fdf->matrix[y][x].y = fdf->matrix[y][x].x * sin(fdf->anglX) +
-            fdf->matrix[y][x].y * cos(fdf->anglX);
-        }
-    }
-    orisovka(fdf);
-    return (0);
-}
-
 
 int		scale(t_fdf *fdf, int scale)// отдельныи функции
 {
@@ -225,7 +94,6 @@ int		scale(t_fdf *fdf, int scale)// отдельныи функции
 		return (0);
     mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
     y = -1;
-	printf("%f\n", scaling);
     while (fdf->matrix[++y])
     {
         x = -1;
@@ -243,27 +111,7 @@ int		scale(t_fdf *fdf, int scale)// отдельныи функции
 	return (0);
 }
 
-int		rotate_dop(t_fdf *fdf)
-{
-	int y;
-    int x;
-    fdf->anglX -=ANGLE;
-     mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-    y = -1;
-    while (fdf->matrix[++y])
-    {
-        x = -1;
-        while (++x < 19)
-        {
-			fdf->matrix[y][x].y = ((19 * fdf->scaling) / 2) +
-            fdf->scaling * fdf->matrix[y][x].d_y - ((11 * fdf->scaling) / 2) *
-            cos(fdf->anglX) + fdf->scaling *  fdf->matrix[y][x].d_z *
-            sin(fdf->anglX);
-        }
-    }
-	orisovka(fdf);
-	return (0);
-}
+
 
 void deafult_state(t_fdf *fdf)
 {
@@ -318,7 +166,7 @@ int manegment_control(int KeyCode, t_fdf *fdf)
 void myabe(t_fdf *fdf)
 {
 	fdf->mlx_ptr = mlx_init();
-    fdf->win_ptr = mlx_new_window (fdf->mlx_ptr,V, H, "Why?" );
+    fdf->win_ptr = mlx_new_window (fdf->mlx_ptr,V, H, "__F_D_F_42__" );
 
     mlx_hook(fdf->win_ptr, 2, 1L<<1, &manegment_control, fdf);
 	mlx_loop(fdf->mlx_ptr);
@@ -334,8 +182,8 @@ int func_parse_stroke (t_fdf *fdf, char *string)
 	x = 0;
 	y = 0;
 	i = 0;
-//	if (vslidate_str(string) || validate_hard(string))
-//		return (-1);
+	if (vslidate_str(string) || validate_hard(string))
+		return (-1);
 	while(string[i])
 	{
 		while(string[i] == ' ' || string[i] == '\t')
@@ -368,8 +216,8 @@ int	creat_matrix(char *line) ///////////////////////////////////////////////////
 {
 	t_point **matrix;
 	t_fdf   *fdf;
-	int n;
-	int y;
+	int 	n;
+	int 	y;
 
 	y = 0;
     fdf = (t_fdf *)malloc(sizeof(t_fdf));
