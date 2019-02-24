@@ -6,7 +6,7 @@
 /*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/24 18:55:14 by wanderer          #+#    #+#             */
-/*   Updated: 2019/02/24 22:48:13 by wanderer         ###   ########.fr       */
+/*   Updated: 2019/02/24 23:12:52 by wanderer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,21 +88,32 @@ int count_new_line(char *line)
             count++;
     return (count);
 }
+
 int funck_check(t_point **matrix)
 {
     int x;
     int y;
-        y = -1;
+    int len;
+    int i;
+
+    len = 0;
+    x = -1;
+    while(matrix[0][++x].check != 1)
+    {
+        len++;
+    }
+    y = -1;
     while(matrix[++y])
     {
         x = -1;
         while(matrix[y][++x].check != 1)
-        {
-            printf("%d\n", matrix[y][x].color);
-        }
-        printf("\n");
+          i++;  
+        if (len != x)
+            return (-1);
     }
+    return (0);
 }
+
 int main (void)
 {
     char **stringY;
@@ -132,6 +143,7 @@ int main (void)
         }
         matrix[y][x].check = 1;
     }
-    funck_check(matrix);
+    if ( funck_check(matrix) == -1)
+        printf("NOOOO");
     return (0);
 }
