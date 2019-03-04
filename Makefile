@@ -1,38 +1,38 @@
-NAME :=		fdf
+NAME=fillit
 
-INC_PATH :=	includes/
-MLX_PATH :=	minilibx_macos/
-LABAF_PATH :=libft/
-OBJ_PATH :=	.obj/
+FLAGS=-Wall -Wextra -Werror
 
-CC :=		clang
-CFLAGS :=	-g #-Wall -Werror -Wextra
-IFLAGS :=	 -I $(MLX_PATH) -I $(LABAF_PATH)
-LFLAGS :=	-L $(MLX_PATH) -L $(LABAF_PATH)
-LFLAGS +=	-framework OpenGL -framework AppKit
-LFLAGS +=	-lm -lmlx 
+SRCS_NAME=ft_isalpha.c ft_putchar.c ft_strjoin.c ft_strlen.c try_add.c\
+ft_strsub.c ft_putstr.c string.c output.c recursia.c ft_bzero.c check_termino.c\
+ft_strdup.c ft_strcpy.c ft_strcat.c main.c error_output.c clear_output.c rename_line.c\
+print_map.c ft_memset.c
 
-HDRS :=		fdf.h $(MLX_PATH)mlx.h $(LABAF_PATH)libft.h
-FILES :=	error_output.c main.c validator.c 
-LIB :=		$(MLX_PATH)libmlx.a $(LABAF_PATH)libft.h
+CC=gcc -g
 
-SRCS :=		$(FILES)
-OBJS :=		$(addprefix $(OBJ_PATH), $(SRCS:%.c=%.o))
+INC_PATH=./
 
+OBJ_PATH=./objects/
 
-all: $(NAME)
+SRCS=$(addprefix $(SRCS_PATH), $(SRCS_NAME))
 
-$(NAME): $(LIB) $(OBJ_PATH) $(OBJS)
-	$(CC) $(CFLAGS) $(IFLAGS) $(LFLAGS) $(OBJS) -o $(NAME)
-$(LIB): 
-	make -C $(MLX_PATH)
-	make -C $(LIBAF_PATH)
+OBJ=$(addprefix $(OBJ_PATH), $(SRCS_NAME:.c=.o))
 
+all:
+	$(NAME)
 
-$(OBJ_PATH):
-	mkdir -p $(OBJ_PATH)$(SRC_PATH)
-$(OBJ_PATH)%.o: %.c $(HDRS)
-	$(CC) $(CFLAGS) $(IFLAGS) -c $< -o $@
+$(NAME):$(OBJ)
+	@$(CC) $(FLAGS) $(OBJ) -o $(NAME)
 
+$(OBJ_PATH)%.o:$(SRCS_PATH)%.c
+	@mkdir -p ./objects
+	@$(CC) -c $(FLAGS) -I $(INC_PATH) $< -o $@
 
-.PHONY: all clean fclean re mclean mfclean mre
+clean:
+	@/bin/rm -rf $(OBJ_PATH)
+
+fclean: clean
+	@/bin/rm -rf $(NAME)
+
+re:	fclean all
+
+.PHONY	: all, clean, fclean, re

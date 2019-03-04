@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 15:32:13 by denya             #+#    #+#             */
-/*   Updated: 2019/02/24 20:49:55 by wanderer         ###   ########.fr       */
+/*   Updated: 2019/03/04 18:25:35 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef FDF_H
 # define FDF_H
@@ -23,7 +22,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-//# include <mlx.h>
+# include <mlx.h>
 # include <math.h>
 
 typedef	struct	s_point
@@ -50,7 +49,9 @@ typedef	struct	s_fdf
 	double		anglZ;
 	int			len_y;
 	int			len_x;
-	int			scaling;
+	double			scaling;
+	double			scaling1;
+	double			scaling2;
 
 }				t_fdf;
 
@@ -79,7 +80,8 @@ typedef	struct	s_fdf
 
 # define SPACE 49
 # define ANGLE 0.02
-# define SCALE 1.1
+# define SCALE 0.1
+# define SIZE 15
 
 
 # define ALPHA 15
@@ -89,16 +91,22 @@ typedef	struct	s_fdf
 int		rotate_X(t_fdf *fdf, int direct);
 int		rotate_Y(t_fdf *fdf, int direct);
 int		rotate_Z(t_fdf *fdf, int direct);
+
 int		validate_hard(char *buf);
 int		vslidate_str(char *buf);
 int		error_output(char **argv, int ch);
+
 int		count_new_line(char *line);
 int		**create_matrix(char *line, int len);
 int		*create_element_matrix(char *stroke);
 int		rotate_dop(t_fdf *fdf);
 int		count_element(char *element);
 int		matrix_povorota(t_point *point, int angle);
-void	create_list(char *line);
+int		ft_comma(char *string);
+int		scaleB(t_fdf *fdf);
+int		scaleS(t_fdf *fdf);
+//void	create_list(char *line);
+
 void	orisovka(t_fdf *fdf);
 
 #endif

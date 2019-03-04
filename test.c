@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wanderer <wanderer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/02 16:32:53 by wanderer          #+#    #+#             */
-/*   Updated: 2019/02/24 20:15:44 by wanderer         ###   ########.fr       */
+/*   Updated: 2019/03/04 18:50:09 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,108 +17,12 @@
 int func_parse_stroke (t_fdf *fdf, char *string);
 
 
-static int check_value(char str, int *color, int *power)
-{
-	if (str == 'A')
-        *color = *color + 10  * pow(16, (*power));
-    else if (str == 'B')
-        *color = *color + 11  * pow(16, (*power));
-    else if (str == 'C')
-		*color = *color + 12  * pow(16, (*power));
-    else if (str == 'D')
-		*color = *color + 13  * pow(16, (*power));
-    else if (str == 'E')
-		*color = *color + 14  * pow(16, (*power));
-    else if (str == 'F')
-		*color = *color + 15  * pow(16, (*power));
-    (*power)++;
-	return (*color);
-}
-
-static int        color_found(char *str)
-{
-	int 	i;
-    int		color;
-    char	*s;
-	int		power;
-	power = 0;
-    color = 0;
-	i = 2;
-	
-    while (str[i] && i < 8)
-        i++;
-    while(i-- > 2)
-    {
-		if (str[i] >= 'A' && str[i] <= 'F')
-			check_value(str[i], &color, &(power));
-        else
-        {
-            s = ft_strsub(&str[i], 0, 1);
-            color += ft_atoi(s) * pow(16, power++);	
-        }
-    }
-    return (color);
-}
-
-int	ft_comma(char *string)
-{
-	int i;
-	char *leaks;
-
-	i = 0;
-	while(string[i] && (string[i] >= '0' && string[i] <= '9' ))
-		i++;
-	if (string[i] != ',')
-		return (16777215);
-	else
-	{
-		leaks = ft_strsub(string + i, 1 , 9);
-		i = color_found(leaks);
-		free(leaks);
-		return (i);
-	}
-}
-
-int		scale(t_fdf *fdf, int scale)// отдельныи функции
-{
-	int y;
-    int x;
-	static double scaling = 1;
-
-
-	if (scale)
-        scaling += 0.3;
-    else
-        scaling -= 0.3;
-	if (scaling > 2.3 || scaling < 0.7)
-		return (0);
-    mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
-    y = -1;
-    while (fdf->matrix[++y])
-    {
-        x = -1;
-        while (++x < 19)
-        {
-			fdf->matrix[y][x].d_x = fdf->matrix[y][x].d_x * scaling;
-			fdf->matrix[y][x].d_y = fdf->matrix[y][x].d_y * scaling;
-			fdf->matrix[y][x].d_z = fdf->matrix[y][x].d_z * scaling;
-			fdf->matrix[y][x].x = fdf->matrix[y][x].d_x;
-			fdf->matrix[y][x].y = fdf->matrix[y][x].d_y;
-			fdf->matrix[y][x].z = fdf->matrix[y][x].d_z;
-        }
-    }
-	orisovka(fdf);
-	return (0);
-}
-
-
 
 void deafult_state(t_fdf *fdf)
 {
 	int x;
 	int y;
 
-	x = -1;
 	y = -1;
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
 	fdf->anglX = 0;
@@ -126,17 +30,18 @@ void deafult_state(t_fdf *fdf)
 	fdf->scaling = 1;
 	while (fdf->matrix[++y])
 	{
-		x = 0;
-		while (x < 19)
+		x = -1;
+		while (fdf->matrix[y][++x].check != 1)
 		{
+			// ++x < 19
 			fdf->matrix[y][x].y = fdf->scaling * fdf->matrix[y][x].d_y;
 			fdf->matrix[y][x].x = fdf->scaling * fdf->matrix[y][x].d_x;
 			fdf->matrix[y][x].z = fdf->scaling * fdf->matrix[y][x].d_z;
-			x++;
 		}	
 	}
     orisovka(fdf);
 }
+
 
 int manegment_control(int KeyCode, t_fdf *fdf)
 {
@@ -153,9 +58,9 @@ int manegment_control(int KeyCode, t_fdf *fdf)
 	else if (KeyCode == SPACE)
 		deafult_state(fdf);
 	else if (KeyCode == PLUS)
-		scale(fdf, TRUE);
-	else if (KeyCode == MINUS && fdf->scaling > 0)
-		scale(fdf, FALSE);
+		scaleB(fdf);
+	else if (KeyCode == MINUS)
+		scaleS(fdf);
 	else if (KeyCode == ESC)
 		exit(0);
 	else if (KeyCode == C)
@@ -167,7 +72,9 @@ void myabe(t_fdf *fdf)
 {
 	fdf->mlx_ptr = mlx_init();
     fdf->win_ptr = mlx_new_window (fdf->mlx_ptr,V, H, "__F_D_F_42__" );
-
+	fdf->scaling1 = 0.5;
+	fdf->scaling2 = 2;
+	deafult_state(fdf);
     mlx_hook(fdf->win_ptr, 2, 1L<<1, &manegment_control, fdf);
 	mlx_loop(fdf->mlx_ptr);
 }
@@ -192,15 +99,17 @@ int func_parse_stroke (t_fdf *fdf, char *string)
 		{
 			while(string[i] == '\n')
 				i++;
-			y++;
+			fdf->matrix[y][x].check = 1;
 			x = 0;
+			y++;
 		}
 		if ((string[i] >= '0' && string[i] <= '9'))
 		{
-			fdf->matrix[y][x].d_x = x;
-			fdf->matrix[y][x].d_y = y;
-			fdf->matrix[y][x].d_z = ft_atoi(&string[i]);
+			fdf->matrix[y][x].d_x = x * SIZE;
+			fdf->matrix[y][x].d_y = y * SIZE;
+			fdf->matrix[y][x].d_z = ft_atoi(&string[i]) * SIZE;
 			fdf->matrix[y][x].color = ft_comma(&string[i]);
+			fdf->matrix[y][x].check = 0;
 			x++;
 			i++;
 		}

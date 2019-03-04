@@ -6,7 +6,7 @@
 /*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/08 04:11:34 by dmolyboh          #+#    #+#             */
-/*   Updated: 2019/02/22 13:49:34 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/03/04 17:23:56 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,11 +94,12 @@ void orisovka(t_fdf *fdf)
     while (fdf->matrix[++y])
     {
         x = -1;
-        while (++x < 18)
+        while (fdf->matrix[y][++x + 1].check != 1)
             line(fdf->mlx_ptr, fdf->win_ptr,fdf->matrix[y][x].x, fdf->matrix[y][x].y, fdf->matrix[y][x + 1].x, fdf->matrix[y][x + 1].y, fdf->matrix[y][x].color, fdf->matrix[y][x + 1].color);
-    }  
+    } 
+    y = 0;
     x = -1;
-    while (++x < 19)
+    while (fdf->matrix[y][++x].check != 1)
     {
         y = -1;
         while (fdf->matrix[++y + 1])
