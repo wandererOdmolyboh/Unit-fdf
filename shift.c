@@ -1,67 +1,63 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scale.c                                            :+:      :+:    :+:   */
+/*   shift.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/03/15 11:08:20 by dmolyboh          #+#    #+#             */
-/*   Updated: 2019/03/15 12:14:05 by dmolyboh         ###   ########.fr       */
+/*   Created: 2019/03/15 11:11:51 by dmolyboh          #+#    #+#             */
+/*   Updated: 2019/03/15 13:16:51 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static	void	initial(t_fdf *fdf, double scaling, int x, int y)
+int		shift_Y(t_fdf *fdf, int direct)
 {
-	fdf->matrix[y][x].d_x = fdf->matrix[y][x].d_x * scaling;
-	fdf->matrix[y][x].d_y = fdf->matrix[y][x].d_y * scaling;
-	fdf->matrix[y][x].d_z = fdf->matrix[y][x].d_z * scaling;
-	fdf->matrix[y][x].x = fdf->matrix[y][x].x * scaling;
-	fdf->matrix[y][x].y = fdf->matrix[y][x].y * scaling;
-	fdf->matrix[y][x].z = fdf->matrix[y][x].z * scaling;
-}
+	int		y;
+	int		x;
+	double	shift;
 
-int				scaleS(t_fdf *fdf)
-{
-	int			y;
-	int			x;
-	double		scaling1;
-
-	if (fdf->scaling < 0.8)
-		return (0);
-	scaling1 = 0.5;
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
+	if (direct)
+		shift = 2;
+	else
+		shift = -2;
 	y = -1;
 	while (fdf->matrix[++y])
 	{
 		x = -1;
 		while (fdf->matrix[y][++x].check != 1)
-			initial(fdf, scaling1, x, y);
+		{
+			fdf->matrix[y][x].d_y = fdf->matrix[y][x].d_y + shift;
+			fdf->matrix[y][x].y = fdf->matrix[y][x].y + shift;
+		}
 	}
-	fdf->scaling -= SCALE;
 	orisovka(fdf);
 	return (0);
 }
 
-int				scaleB(t_fdf *fdf)
+int		shift_X(t_fdf *fdf, int direct)
 {
-	int			y;
-	int			x;
-	double		scaling2;
+	int		y;
+	int		x;
+	double	shift;
 
-	if (fdf->scaling > 1.2)
-		return (0);
-	scaling2 = 2;
 	mlx_clear_window(fdf->mlx_ptr, fdf->win_ptr);
+	if (direct)
+		shift = 2;
+	else
+		shift = -2;
 	y = -1;
 	while (fdf->matrix[++y])
 	{
 		x = -1;
 		while (fdf->matrix[y][++x].check != 1)
-			initial(fdf, scaling2, x, y);
+		{
+			fdf->matrix[y][x].d_x = fdf->matrix[y][x].d_x + shift;
+			fdf->matrix[y][x].x = fdf->matrix[y][x].x + shift;
+		}
 	}
-	fdf->scaling += SCALE;
 	orisovka(fdf);
 	return (0);
 }

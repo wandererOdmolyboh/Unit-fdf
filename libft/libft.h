@@ -6,7 +6,7 @@
 /*   By: dmolyboh <dmolyboh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/06 10:56:38 by dmolyboh          #+#    #+#             */
-/*   Updated: 2019/02/16 16:07:56 by dmolyboh         ###   ########.fr       */
+/*   Updated: 2019/03/15 11:28:58 by dmolyboh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,6 @@ int					ft_power(int x, int y);
 void				ft_swap(int *a, int *b);
 int					ft_sqrt(int nb);
 void				ft_foreach(int *tab, int length, void (*f)(int));
-char                **ft_strsplit(char const *s, char c);
+char				**ft_strsplit(char const *s, char c);
 
 #endif
