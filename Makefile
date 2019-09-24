@@ -1,38 +1,42 @@
-NAME=fillit
+NAME = fdf
 
-FLAGS=-Wall -Wextra -Werror
+SRC_DIR = ./SRC/
 
-SRCS_NAME=ft_isalpha.c ft_putchar.c ft_strjoin.c ft_strlen.c try_add.c\
-ft_strsub.c ft_putstr.c string.c output.c recursia.c ft_bzero.c check_termino.c\
-ft_strdup.c ft_strcpy.c ft_strcat.c main.c error_output.c clear_output.c rename_line.c\
-print_map.c ft_memset.c
+SRC = main.c error_output.c validator.c text.c creat_matrix.c\
+parse.c rotate.c creater_wind.c line.c scale.c gradient.c\
+color.c ch_color.c shift.c manegment.c leaks.c change_proe.c
 
-CC=gcc -g
+SRC_U = $(addprefix $(SRC_DIR),$(SRC))
 
-INC_PATH=./
+OBJ_DIR = ./OBJ/
 
-OBJ_PATH=./objects/
+OBJ =  $(addprefix $(OBJ_DIR),$(SRC:.c=.o))
 
-SRCS=$(addprefix $(SRCS_PATH), $(SRCS_NAME))
+FLAG = -Wall -Wextra -Werror
 
-OBJ=$(addprefix $(OBJ_PATH), $(SRCS_NAME:.c=.o))
+FLAG_MLX = -L /usr/local/lib/ -lmlx -framework OpenGl -framework AppKit
 
-all:
-	$(NAME)
+MLX = ./miniLibx_macos/
 
-$(NAME):$(OBJ)
-	@$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+LIB = ./libft/
 
-$(OBJ_PATH)%.o:$(SRCS_PATH)%.c
-	@mkdir -p ./objects
-	@$(CC) -c $(FLAGS) -I $(INC_PATH) $< -o $@
+all: $(NAME)
 
-clean:
-	@/bin/rm -rf $(OBJ_PATH)
+$(NAME) : $(OBJ)
+	@make -C $(LIB)
+	@make -C $(MLX)
+	@clang -g $(FLAG) -I /usr/local/include $(OBJ) $(LIB)libft.a $(FLAG_MLX) -o $(NAME)
 
-fclean: clean
-	@/bin/rm -rf $(NAME)
+$(OBJ_DIR)%.o : $(SRC_DIR)%.c
+	@mkdir  -p $(OBJ_DIR)
+	clang -g  $(FLAG) -o $@ -c $<
 
-re:	fclean all
+clean :
+	@make -C $(LIB) clean
+	@make -C $(MLX) clean
+	@rm -rf $(OBJ_DIR)
 
-.PHONY	: all, clean, fclean, re
+fclean : clean
+	@make -C $(LIB) fclean
+	@rm -f $(NAME)
+re : fclean all
